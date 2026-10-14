@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Test and coverage artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Editor and operating-system files
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini
+
+# Temporary exports; retain curated evidence in results/ only
+tmp/
+*.tmp
