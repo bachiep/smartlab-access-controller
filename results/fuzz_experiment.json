@@ -1,0 +1,101 @@
+{
+  "target": "parse_override_packet",
+  "magic_packet_hex": "534c4143",
+  "black_box": {
+    "runs": [
+      {
+        "method": "black_box",
+        "seed": 11,
+        "attempts": 100000,
+        "duration_seconds": 0.03518549999989773,
+        "reached_target": false,
+        "packet_hex": null
+      },
+      {
+        "method": "black_box",
+        "seed": 23,
+        "attempts": 100000,
+        "duration_seconds": 0.03345979999994597,
+        "reached_target": false,
+        "packet_hex": null
+      },
+      {
+        "method": "black_box",
+        "seed": 37,
+        "attempts": 100000,
+        "duration_seconds": 0.03317090000018652,
+        "reached_target": false,
+        "packet_hex": null
+      },
+      {
+        "method": "black_box",
+        "seed": 53,
+        "attempts": 100000,
+        "duration_seconds": 0.032309499999882973,
+        "reached_target": false,
+        "packet_hex": null
+      },
+      {
+        "method": "black_box",
+        "seed": 71,
+        "attempts": 100000,
+        "duration_seconds": 0.03571439999996073,
+        "reached_target": false,
+        "packet_hex": null
+      }
+    ],
+    "mean_attempts": 100000.0,
+    "median_attempts": 100000,
+    "mean_duration_seconds": 0.033968019999974786,
+    "median_duration_seconds": 0.03345979999994597
+  },
+  "concolic": {
+    "runs": [
+      {
+        "method": "concolic",
+        "seed": 11,
+        "attempts": 1,
+        "duration_seconds": 0.006744199999957345,
+        "reached_target": true,
+        "packet_hex": "534c4143"
+      },
+      {
+        "method": "concolic",
+        "seed": 23,
+        "attempts": 1,
+        "duration_seconds": 0.0012858000000051106,
+        "reached_target": true,
+        "packet_hex": "534c4143"
+      },
+      {
+        "method": "concolic",
+        "seed": 37,
+        "attempts": 1,
+        "duration_seconds": 0.0012419999998201092,
+        "reached_target": true,
+        "packet_hex": "534c4143"
+      },
+      {
+        "method": "concolic",
+        "seed": 53,
+        "attempts": 1,
+        "duration_seconds": 0.0017199000003529363,
+        "reached_target": true,
+        "packet_hex": "534c4143"
+      },
+      {
+        "method": "concolic",
+        "seed": 71,
+        "attempts": 1,
+        "duration_seconds": 0.002942900000107329,
+        "reached_target": true,
+        "packet_hex": "534c4143"
+      }
+    ],
+    "mean_attempts": 1.0,
+    "median_attempts": 1,
+    "mean_duration_seconds": 0.002786960000048566,
+    "median_duration_seconds": 0.0017199000003529363
+  },
+  "patched_magic_packet_decision": "denied"
+}
