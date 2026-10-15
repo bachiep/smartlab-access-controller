@@ -19,6 +19,7 @@ from z3 import BitVec, Solver, sat
 
 MAGIC_PACKET = b"SLAC"
 SEEDS = (11, 23, 37, 53, 71)
+MAX_ATTEMPTS = 100_000
 
 
 class Decision(str, Enum):
@@ -41,6 +42,7 @@ class ExperimentReport:
     black_box_runs: tuple[SearchResult, ...]
     concolic_runs: tuple[SearchResult, ...]
     patched_decision: Decision
+    max_attempts: int
 
     def summary(self) -> dict[str, object]:
         def summarize(runs: tuple[SearchResult, ...]) -> dict[str, object]:
@@ -57,6 +59,9 @@ class ExperimentReport:
         return {
             "target": "parse_override_packet",
             "magic_packet_hex": MAGIC_PACKET.hex(),
+            "input_size_bytes": len(MAGIC_PACKET),
+            "seeds": list(SEEDS),
+            "max_attempts_per_run": self.max_attempts,
             "black_box": summarize(self.black_box_runs),
             "concolic": summarize(self.concolic_runs),
             "patched_magic_packet_decision": self.patched_decision.value,
@@ -137,7 +142,7 @@ def concolic_search(target: Callable[[bytes], Decision], *, seed: int) -> Search
     )
 
 
-def run_experiment(max_attempts: int = 100_000) -> ExperimentReport:
+def run_experiment(max_attempts: int = MAX_ATTEMPTS) -> ExperimentReport:
     """Run five indexed trials per method on the same vulnerable target."""
     black_box_runs = tuple(
         black_box_search(evaluate_vulnerable_packet, seed=seed, max_attempts=max_attempts)
@@ -149,6 +154,7 @@ def run_experiment(max_attempts: int = 100_000) -> ExperimentReport:
             concolic_search(evaluate_vulnerable_packet, seed=seed) for seed in SEEDS
         ),
         patched_decision=evaluate_patched_packet(MAGIC_PACKET),
+        max_attempts=max_attempts,
     )
 
 

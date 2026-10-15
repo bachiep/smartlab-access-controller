@@ -73,6 +73,25 @@ def test_liveness_uses_the_tool_supported_af_formula():
     assert "AF(complete)" in formulas
 
 
+def test_each_required_fixture_and_arithmetic_check_has_a_traceable_case():
+    workbook = load_workbook(WORKBOOK, data_only=False)
+    test_rows = list(workbook["TestCase"].iter_rows(min_row=2, values_only=True))
+    titles = [row[2] for row in test_rows]
+
+    for expected_title in (
+        "Tràn bộ đệm mã thẻ",
+        "Rò rỉ audit record",
+        "Giải phóng kép phiên",
+        "Dùng bộ nhớ sau khi giải phóng",
+        "Bộ đếm access_event_total vượt ngưỡng int32",
+        "Bộ đếm audit_byte_total vượt ngưỡng int32",
+        "Bộ đếm daily_badge_total vượt ngưỡng int16",
+        "Bộ đếm active_session_total vượt ngưỡng uint16",
+        "Bộ đếm denied_attempt_total vượt ngưỡng int16",
+    ):
+        assert expected_title in titles
+
+
 def test_every_nonterminal_state_moves_toward_completion():
     workbook = load_workbook(WORKBOOK, data_only=False)
     transitions = {

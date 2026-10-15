@@ -28,9 +28,10 @@ Yêu cầu: Python 3.11+ và `z3-solver`.
 python -m pip install -r requirements.txt
 python -m pytest -q
 python tools\run_fuzz_experiment.py
+python tools\verify_ctl_liveness.py
 ```
 
-Script tạo `results/fuzz_experiment.json` và `results/fuzz_runs.csv`. Mỗi kỹ thuật có năm lượt được lập chỉ mục bằng cùng các seed; concolic là xác định nên seed chỉ nhận diện lần lặp, không làm thay đổi ràng buộc Z3.
+Script tạo `results/fuzz_experiment.json`, `results/fuzz_runs.csv` và `results/ctl_liveness_check.json`. Mỗi kỹ thuật có năm lượt được lập chỉ mục bằng cùng các seed; concolic là xác định nên seed chỉ nhận diện lần lặp, không làm thay đổi ràng buộc Z3.
 
 ## Chạy Spec Verification Lab
 
@@ -41,4 +42,4 @@ Script tạo `results/fuzz_experiment.json` và `results/fuzz_runs.csv`. Mỗi k
 
 Các CWE/CTL vi phạm sinh từ fixture trong workbook là bằng chứng công cụ học phần, không phải tuyên bố về hệ thống triển khai thật.
 
-Spec Verification Lab chỉ nhận công thức CTL đơn giản với một nhãn nguyên tử. Vì vậy workbook dùng `AF(complete)` để kiểm tra trực tiếp từ trạng thái khởi tạo; mô hình bảo đảm mọi nhánh, gồm `access_denied`, đều đến `session_closed` mang nhãn `complete`.
+Spec Verification Lab chỉ nhận công thức CTL đơn giản với một nhãn nguyên tử. Vì vậy workbook dùng `AF(complete)` để kiểm tra trực tiếp từ trạng thái khởi tạo; mô hình bảo đảm mọi nhánh, gồm `access_denied`, đều đến `session_closed` mang nhãn `complete`. Script của nhóm kiểm chứng độc lập công thức đầy đủ `AG(normal_entry_active -> AF(complete))` trên chính mô hình trong workbook.

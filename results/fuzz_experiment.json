@@ -1,13 +1,22 @@
 {
   "target": "parse_override_packet",
   "magic_packet_hex": "534c4143",
+  "input_size_bytes": 4,
+  "seeds": [
+    11,
+    23,
+    37,
+    53,
+    71
+  ],
+  "max_attempts_per_run": 100000,
   "black_box": {
     "runs": [
       {
         "method": "black_box",
         "seed": 11,
         "attempts": 100000,
-        "duration_seconds": 0.03518549999989773,
+        "duration_seconds": 0.03704710000056366,
         "reached_target": false,
         "packet_hex": null
       },
@@ -15,7 +24,7 @@
         "method": "black_box",
         "seed": 23,
         "attempts": 100000,
-        "duration_seconds": 0.03345979999994597,
+        "duration_seconds": 0.05396030000065366,
         "reached_target": false,
         "packet_hex": null
       },
@@ -23,7 +32,7 @@
         "method": "black_box",
         "seed": 37,
         "attempts": 100000,
-        "duration_seconds": 0.03317090000018652,
+        "duration_seconds": 0.0445265999996991,
         "reached_target": false,
         "packet_hex": null
       },
@@ -31,7 +40,7 @@
         "method": "black_box",
         "seed": 53,
         "attempts": 100000,
-        "duration_seconds": 0.032309499999882973,
+        "duration_seconds": 0.04620489999979327,
         "reached_target": false,
         "packet_hex": null
       },
@@ -39,15 +48,15 @@
         "method": "black_box",
         "seed": 71,
         "attempts": 100000,
-        "duration_seconds": 0.03571439999996073,
+        "duration_seconds": 0.04919770000014978,
         "reached_target": false,
         "packet_hex": null
       }
     ],
     "mean_attempts": 100000.0,
     "median_attempts": 100000,
-    "mean_duration_seconds": 0.033968019999974786,
-    "median_duration_seconds": 0.03345979999994597
+    "mean_duration_seconds": 0.046187320000171894,
+    "median_duration_seconds": 0.04620489999979327
   },
   "concolic": {
     "runs": [
@@ -55,7 +64,7 @@
         "method": "concolic",
         "seed": 11,
         "attempts": 1,
-        "duration_seconds": 0.006744199999957345,
+        "duration_seconds": 0.014535999999679916,
         "reached_target": true,
         "packet_hex": "534c4143"
       },
@@ -63,7 +72,7 @@
         "method": "concolic",
         "seed": 23,
         "attempts": 1,
-        "duration_seconds": 0.0012858000000051106,
+        "duration_seconds": 0.003451600000516919,
         "reached_target": true,
         "packet_hex": "534c4143"
       },
@@ -71,7 +80,7 @@
         "method": "concolic",
         "seed": 37,
         "attempts": 1,
-        "duration_seconds": 0.0012419999998201092,
+        "duration_seconds": 0.0022727999994458514,
         "reached_target": true,
         "packet_hex": "534c4143"
       },
@@ -79,7 +88,7 @@
         "method": "concolic",
         "seed": 53,
         "attempts": 1,
-        "duration_seconds": 0.0017199000003529363,
+        "duration_seconds": 0.004021300000204064,
         "reached_target": true,
         "packet_hex": "534c4143"
       },
@@ -87,15 +96,15 @@
         "method": "concolic",
         "seed": 71,
         "attempts": 1,
-        "duration_seconds": 0.002942900000107329,
+        "duration_seconds": 0.0022763000006307266,
         "reached_target": true,
         "packet_hex": "534c4143"
       }
     ],
     "mean_attempts": 1.0,
     "median_attempts": 1,
-    "mean_duration_seconds": 0.002786960000048566,
-    "median_duration_seconds": 0.0017199000003529363
+    "mean_duration_seconds": 0.005311600000095495,
+    "median_duration_seconds": 0.003451600000516919
   },
   "patched_magic_packet_decision": "denied"
 }

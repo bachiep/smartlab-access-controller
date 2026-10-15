@@ -8,6 +8,8 @@ Workbook chứa fixture giáo dục theo yêu cầu của Spec Verification Lab:
 
 Thực nghiệm chính của Đề tài 4 nằm ở `src/slac_fuzz/`: `parse_override_packet` nhận gói bốn byte và dùng `SLAC` làm nhánh đích. Black-box và concolic/Z3 chạy trên cùng target này.
 
+Tool giảng viên chỉ thực thi CTL đơn giản với một nhãn nguyên tử. Do đó workbook chứa `AF(complete)` để pipeline xác nhận liveness từ trạng thái khởi tạo, còn `tools/verify_ctl_liveness.py` kiểm chứng độc lập công thức đầy đủ `AG(normal_entry_active -> AF(complete))` trên cùng mô hình Kripke.
+
 Quy tắc khi sửa đặc tả:
 
 - Giữ nguyên đúng 10 sheet và tên các cột trong template.

@@ -47,7 +47,19 @@ def main():
             ("REQ-7", "Hàm xóa badge cache không được truy cập vùng nhớ sau khi giải phóng.", "memory", "HIGH"),
             ("REQ-8", "Bộ đếm sự kiện truy cập không được tràn int32 khi cộng các bộ đếm đầu vào.", "safety", "MEDIUM"),
             ("REQ-9", "Hàm tỷ lệ truy cập hợp lệ phải xử lý mẫu số bằng 0 có kiểm soát.", "functional", "MEDIUM"),
-            ("REQ-10", "Mã mở cửa khẩn cấp gồm hai số nguyên 16-bit phải được kiểm thử bằng black-box và concolic fuzzing.", "functional", "HIGH"),
+            ("REQ-10", "Fixture magic-value của tool dùng cặp số nguyên 16-bit và phải được kiểm thử bằng black-box cùng concolic fuzzing.", "functional", "HIGH"),
+            ("REQ-11", "Parser riêng parse_override_packet chỉ cấp quyền cho đúng gói 4 byte SLAC; bản vá phải chặn nhánh bypass này.", "functional", "HIGH"),
+        ],
+    )
+
+    replace_rows(
+        workbook["YeuCauPhiChucNang"],
+        [
+            ("NFR-1", "Mỗi lượt black-box phải xét tối đa đúng 100000 input trên target SLAC.", "HIGH"),
+            ("NFR-2", "Mỗi record fuzzing phải lưu đủ 5 trường: seed, attempts, duration_seconds, packet_hex, reached_target.", "HIGH"),
+            ("NFR-3", "So sánh phải có đúng 5 lượt mỗi kỹ thuật với seed 11, 23, 37, 53 và 71.", "HIGH"),
+            ("NFR-4", "Kết quả phải tách tối thiểu 2 nhóm: fixture giáo dục của pipeline và target SLAC của Nhóm 11.", "HIGH"),
+            ("NFR-5", "Thành viên còn lại phải tái lập thực nghiệm bằng tối đa 3 lệnh không cần sửa mã nguồn.", "MEDIUM"),
         ],
     )
 
@@ -141,12 +153,18 @@ def main():
         [
             ("TC-1", "REQ-1, REQ-2", "Cụm khóa access_guard cố ý có xung đột", "Hệ thống ở access_free", "Chạy kiểm chứng mô hình\nKiểm tra trạng thái access_conflict", "AG(!violation) vi phạm và mutex phát hiện trạng thái nguy hiểm có chủ đích", "HIGH"),
             ("TC-2", "REQ-3", "Vòng đời một phiên xét duyệt", "Hệ thống ở access_free", "Chạy kiểm chứng mô hình\nKiểm tra CTL liveness", "AF(complete) đúng từ trạng thái khởi tạo", "HIGH"),
-            ("TC-3", "REQ-4, CON-2", "Mã thẻ dài hơn 20 ký tự", "Hàm parse_badge_code được sinh với test fixture", "Sinh mã C\nChạy static checker", "Phát hiện dangerous-function (CWE-120) trên test fixture", "HIGH"),
-            ("TC-4", "REQ-5, REQ-6, REQ-7", "Vòng đời bộ nhớ audit và phiên", "Ba hàm alloc_release được sinh với fixture", "Sinh mã C\nChạy static checker", "Phát hiện CWE-401, CWE-415 và CWE-416 trên fixture", "HIGH"),
-            ("TC-5", "REQ-8", "Bộ đếm sự kiện vượt ngưỡng int32", "Hai biến đếm không âm", "Chạy kiểm tra SMT/Z3", "SAT: tồn tại đầu vào có thể tràn số", "MEDIUM"),
-            ("TC-6", "REQ-9", "Mẫu số tỷ lệ truy cập bằng 0", "Hàm valid_access_ratio được sinh", "Chạy black-box fuzzing 300 lần", "Có ít nhất một ZeroDivisionError trên fixture", "MEDIUM"),
-            ("TC-7", "REQ-10, CON-3", "Tìm mã mở cửa khẩn cấp", "Hàm unlock_override_code có cặp test 5813, 2649", "Chạy concolic fuzzing tối đa 15 vòng", "Tìm đúng cặp và đạt nhánh test oracle", "HIGH"),
-            ("TC-8", "REQ-10, NFR-1, NFR-2, NFR-3", "So sánh fuzzing trên target của nhóm", "Đã chốt seed, ngân sách và môi trường", "Chạy 5 seed black-box\nChạy concolic cùng nhánh SLAC\nLưu CSV và JSON", "Bảng có mean, median, thời gian và input đạt đích", "HIGH"),
+            ("TC-3", "REQ-4, CON-2", "Tràn bộ đệm mã thẻ", "parse_badge_code có fixture buffer-overflow", "Sinh mã C\nChạy check_c_source()", "Phát hiện CWE-120 trên fixture", "HIGH"),
+            ("TC-4", "REQ-5", "Rò rỉ audit record", "create_audit_record có fixture memory-leak", "Sinh mã C\nChạy check_c_source()", "Phát hiện CWE-401 trên fixture", "HIGH"),
+            ("TC-5", "REQ-6", "Giải phóng kép phiên", "close_access_session có fixture double-free", "Sinh mã C\nChạy check_c_source()", "Phát hiện CWE-415 trên fixture", "HIGH"),
+            ("TC-6", "REQ-7", "Dùng bộ nhớ sau khi giải phóng", "reset_badge_cache có fixture use-after-free", "Sinh mã C\nChạy check_c_source()", "Phát hiện CWE-416 trên fixture", "HIGH"),
+            ("TC-7", "REQ-8", "Bộ đếm access_event_total vượt ngưỡng int32", "Hai biến đầu vào không âm", "Chạy check_int32_overflow() bằng Z3", "SAT: có thể tràn int32", "MEDIUM"),
+            ("TC-8", "REQ-8", "Bộ đếm audit_byte_total vượt ngưỡng int32", "Hai biến đầu vào không âm", "Chạy check_int32_overflow() bằng Z3", "SAT: có thể tràn int32", "MEDIUM"),
+            ("TC-9", "REQ-8", "Bộ đếm daily_badge_total vượt ngưỡng int16", "Hai biến đầu vào không âm", "Chạy check_int32_overflow() bằng Z3", "SAT: có thể vượt ngưỡng nghiệp vụ int16", "MEDIUM"),
+            ("TC-10", "REQ-8", "Bộ đếm active_session_total vượt ngưỡng uint16", "Hai biến đầu vào không âm", "Chạy check_int32_overflow() bằng Z3", "SAT: có thể vượt ngưỡng nghiệp vụ uint16", "MEDIUM"),
+            ("TC-11", "REQ-8", "Bộ đếm denied_attempt_total vượt ngưỡng int16", "Hai biến đầu vào không âm", "Chạy check_int32_overflow() bằng Z3", "SAT: có thể vượt ngưỡng nghiệp vụ int16", "MEDIUM"),
+            ("TC-12", "REQ-9", "Mẫu số tỷ lệ truy cập bằng 0", "valid_access_ratio đã được sinh", "Chạy blackbox_fuzz() 300 lần", "Có ít nhất một ZeroDivisionError trên fixture", "MEDIUM"),
+            ("TC-13", "REQ-10, CON-3", "Tìm mã mở cửa khẩn cấp fixture", "unlock_override_code có cặp test 5813, 2649", "Chạy concolic_fuzz() tối đa 15 vòng", "Tìm đúng cặp và đạt nhánh test oracle", "HIGH"),
+            ("TC-14", "REQ-11, NFR-1, NFR-2, NFR-3, NFR-4, NFR-5", "So sánh fuzzing trên target SLAC của Nhóm 11", "Đã chốt seed, ngân sách và môi trường", "Chạy 5 seed black-box x 100000 input\nChạy 5 lượt concolic cùng nhánh SLAC\nLưu CSV, JSON và log CTL", "Bảng có attempts, mean, median, thời gian, input đạt đích và trạng thái bản vá", "HIGH"),
         ],
     )
 

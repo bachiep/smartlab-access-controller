@@ -1,0 +1,21 @@
+{
+  "formula": "AG(normal_entry_active -> AF(complete))",
+  "initial_states": [
+    "access_free"
+  ],
+  "holds": true,
+  "violating_states": [],
+  "satisfying_states": [
+    "access_conflict",
+    "access_denied",
+    "access_free",
+    "access_granted",
+    "access_holds",
+    "audit_holds",
+    "credential_review",
+    "entry_idle",
+    "override_review",
+    "session_closed"
+  ],
+  "note": "Independent project checker; Spec Verification Lab evaluates only simple atomic CTL formulas."
+}

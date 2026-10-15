@@ -1,5 +1,6 @@
 from slac_fuzz.override_packet import (
     MAGIC_PACKET,
+    MAX_ATTEMPTS,
     Decision,
     black_box_search,
     concolic_solve_magic,
@@ -15,6 +16,11 @@ def test_vulnerable_parser_grants_the_magic_packet():
 
 def test_vulnerable_parser_denies_non_magic_packet():
     assert evaluate_vulnerable_packet(b"NOPE") is Decision.DENIED
+
+
+def test_parser_rejects_wrong_length_and_near_magic_packets():
+    for packet in (b"", b"SLA", b"SLAC!", b"SLAX", b"TLAC"):
+        assert evaluate_vulnerable_packet(packet) is Decision.DENIED
 
 
 def test_patched_parser_denies_the_former_bypass_packet():
@@ -44,3 +50,11 @@ def test_experiment_compares_five_seeded_runs_for_each_method():
     assert all(run.packet == MAGIC_PACKET for run in report.concolic_runs)
     assert all(run.reached_target for run in report.concolic_runs)
     assert report.patched_decision is Decision.DENIED
+
+
+def test_default_experiment_exhausts_the_declared_black_box_budget():
+    report = run_experiment()
+
+    assert MAX_ATTEMPTS == 100_000
+    assert all(run.attempts == MAX_ATTEMPTS for run in report.black_box_runs)
+    assert report.summary()["max_attempts_per_run"] == MAX_ATTEMPTS
